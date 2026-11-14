@@ -145,6 +145,7 @@ module Aro
               oss_om_const.send(params[:aro_class_method])
             end
           rescue NoMethodError => e
+            Aro::Dom::Ma_ain.sane_backtrace!
             Aro::P.say("exec_oss_om error! #{e}")
           end
         when :exec_system

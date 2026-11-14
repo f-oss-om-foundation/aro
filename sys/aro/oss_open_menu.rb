@@ -19,6 +19,7 @@ module Aro
         "Aro::Dom::Oss_OpenMenu",
         "Aro::Dom::Ma_ain",
         "Aro::Dom::Library",
+        "Aro::Dom::Book",
         "Aro::Dom::Git",
         "Aro::Dom::Ssh"
       ]

@@ -14,6 +14,15 @@ module Aro
   module Dom
     class Imports
 
+      # example usage:
+      # text = nil
+      # while chapter_text.nil? ||
+      #   text.empty?
+
+      #   prompt_text = "plain_text_import: (choose file)"
+      #   text = Aro::Dom::Imports.get_plain_text_import(prompt_text)
+      # end
+
       def self.get_plain_text_import(prompt_text)
         ensure_imports_dir_exists!
 

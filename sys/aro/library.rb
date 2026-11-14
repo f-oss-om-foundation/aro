@@ -62,10 +62,15 @@ module Aro
         raise "invalid uuid! #{menu_item_uuid}" if table_of_contents_menu_item.nil?
 
         puts TTY::Font.new(:standard).write(
-          table_of_contents_menu_item.localized_name,
+          :"f.open_contents".to_s,
           letter_spacing: 1
         )
-        Aro::Dom::Book.open_table_of_contents!(table_of_contents_menu_item)
+
+        contents_menu = Aro::Dom::Book.open_table_of_contents!(
+          table_of_contents_menu_item
+        )
+
+        Aro::Dom::Ma_ain.navigate_to!(contents_menu)
       end
 
       def self.create_book!

@@ -32,10 +32,6 @@ class Aro::Dom::DataBase::Directory < ActiveRecord::Base
     ::File.join(data_base.aro_data_base_path, unix_path)
   end
 
-  def schema
-    ::File.join(aro_directory_path, :def_directory, ".json")
-  end
-
   private
 
   def sync

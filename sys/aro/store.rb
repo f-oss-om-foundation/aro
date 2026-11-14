@@ -91,7 +91,7 @@ class Aro::Dom::Store
     #   }
     #   action_data:
     # }
-    raise "invalid oss_om_const!" unless Aro::Dom::Oss_OpenMenu::EXEC_CLASSES.include?(oss_om_const.name)
+    raise "invalid oss_om_const! #{oss_om_const}" unless Aro::Dom::Oss_OpenMenu::EXEC_CLASSES.include?(oss_om_const.name)
     raise "invalid oss_om_method! #{oss_om_method}" unless oss_om_const.methods.include?(oss_om_method.to_sym)
 
     # todo: validate oss_om_params && oss_om_data
