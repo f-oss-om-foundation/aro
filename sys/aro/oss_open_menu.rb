@@ -76,6 +76,11 @@ module Aro
         Aro::P.say("sourcing existing Aro::Cor env...")
         Aro::Cor.instance.source_config
 
+        # # temp debugging
+        # # explicitly debug in development and data_base logging
+        # Aro::Cor.set_ivar(:LOG_DATABASE, :true.to_s)
+        # Aro::Cor.set_ivar(:ENV, Aro::Cor::ENVS[:DEVELOPMENT])
+
         # set up oss_om workspace
         Aro::P.say("Aro::Dom::Ma_ain.init!")
         Aro::Dom::Ma_ain.init!
@@ -239,32 +244,6 @@ module Aro
           selected_const_name.constantize,
           selected_method_name
         )
-      end
-
-      def self.create_exec_system_entry_for(menu_item)
-        unless Aro::Dom::Ma_ain.is_encrypted?
-          Aro::P.say(__method__)
-          Aro::P.say("redirecting to settings until Aro::Dom::Ma_ain.is_encrypted!")
-          Aro::Dom::Ma_ain.exec_settings!
-          return
-        end
-
-        puts __method__
-        puts self.name
-        Aro::Dom::Ma_ain.sane_backtrace!
-      end
-
-      def self.create_exec_data_base_entry_for(menu_item)
-        unless Aro::Dom::Ma_ain.is_encrypted?
-          Aro::P.say(__method__)
-          Aro::P.say("redirecting to settings until Aro::Dom::Ma_ain.is_encrypted!")
-          Aro::Dom::Ma_ain.exec_settings!
-          return
-        end
-
-        puts __method__
-        puts self.name
-        Aro::Dom::Ma_ain.sane_backtrace!
       end
 
       def self.open_git!

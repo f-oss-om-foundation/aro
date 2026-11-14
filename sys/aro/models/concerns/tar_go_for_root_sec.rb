@@ -26,10 +26,7 @@ module Aro
       private
 
       def do_encryption_stuff
-        Aro::P.say(__method__)
-        Aro::P.say("todo: #{self.class.name}")
-        Aro::P.say(self.class.inspect)
-        Aro::Dom::Ma_ain.sane_backtrace!
+        puts "todo: #{__method__}"
       end
     end
   end

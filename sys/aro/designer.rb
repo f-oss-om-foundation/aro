@@ -326,6 +326,70 @@ module Aro
         end
       end
 
+      def self.design_schema_for(chapter_menu_item)
+        action_data = chapter_menu_item.store.safe_get_key("action_data") || {}
+        raise "missing action params for #{chapter_menu_item.inspect}!" if action_data.nil? ||
+          !action_data.kind_of?(Hash)
+
+        action_data_copy = action_data.dup
+        loop do
+          options = [
+            {name: :back, value: :back},
+            {name: "new_key(+)", value: :new_key}
+          ] + action_data_copy.map{|k, v|
+            {name: "#{k}(#{v})", value: k}
+          } + [
+            {name: :save, value: :save},
+          ]
+
+          selected_option = Aro::P.default_select(
+            I18n.t("open_menu.design_schema_for", localized_name: chapter_menu_item.localized_name),
+            options
+          )
+
+          case selected_option.to_sym
+          when :back
+            confirmed = true
+            if action_data_copy.any?{|k, v| action_data[k] != v} ||
+              (action_data_copy.keys & action_data.keys).count != action_data.keys.count
+              confirmed = get_new_value_from_user(
+                "unsaved changes exist. leave schema designer?",
+                "press enter to confirm ('n' to cancel):"
+              ).nil?
+            end
+            return if confirmed
+          when :save
+            chapter_menu_item.aro_file.write!({action_data: action_data_copy})
+            return
+          when :new_key
+            # create new key
+            new_key = get_new_value_from_user("enter new key: ")
+            next if new_key.nil?
+            if action_data_copy.keys.include?(new_key)
+              # confirm overwrite?
+              confirm_overwrite = get_new_value_from_user(
+                "key #{new_key} already exists.",
+                "press enter to confirm ('n' to cancel):"
+              )
+              unless confirm_overwrite.nil?
+                Aro::P.say("user cancelled")
+                next
+              end
+            end
+            action_data_copy[new_key] = get_new_value_from_user(
+              "enter new value for #{new_key}:",
+            )
+            Aro::P.say("set #{new_key} to #{action_data_copy[new_key]}")
+          else
+            # edit selected key
+            action_data_copy[selected_option] = get_new_value_from_user(
+              "enter new value for #{selected_option}:",
+            )
+            Aro::P.say("set #{selected_option} to #{action_data_copy[selected_option]}")
+          end
+        end
+      end
+
       def self.get_new_value_from_user(ask_text, prompt_text_override = nil)
         Aro::P.say(__method__)
         new_val = nil

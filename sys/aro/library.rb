@@ -62,7 +62,7 @@ module Aro
         raise "invalid uuid! #{menu_item_uuid}" if table_of_contents_menu_item.nil?
 
         puts TTY::Font.new(:standard).write(
-          :"f.open_contents".to_s,
+          :"f.open_chapter".to_s,
           letter_spacing: 1
         )
 
@@ -99,7 +99,7 @@ module Aro
               confirmed = Aro::P.p.ask(I18n.t("open_menu.library.unsaved_changes_confirm")).to_sym
               confirmed = confirmed == :y
             end
-            return Aro::Dom::Ma_ain.open! if confirmed
+            return Aro::Dom::Library.open! if confirmed
           when :title, :author_name, :isbn, :copyright_year, :published_by
             new_value = Aro::Dom::Designer.get_new_value_from_user(selected_option)
             Aro::P.say("setting #{selected_option} to #{new_value}")

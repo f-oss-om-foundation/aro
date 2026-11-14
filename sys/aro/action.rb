@@ -28,30 +28,11 @@ module Aro
             },
             aro_call_params: {
               default_value: [],
-            },
-            aro_store_data: {
-              default_value: {}
-            }
-          }
-        },
-        SYSTEM: {
-          key: :exec_system,
-          params: {
-            command_string: {
-              default_value: nil,
-              required: true
-            }
-          }
-        },
-        CREATE_DATA_BASE: {
-          key: :exec_data_base,
-          params: {
-            data_base_name: {
-              default_value: nil,
-              required: true,
-              unique: true
             }
           },
+          data: {
+            default_value: {}
+          }
         }
       }
 
@@ -105,10 +86,6 @@ module Aro
         case aro_action_type_def[:key]
         when :exec_oss_om
           Aro::Dom::Oss_OpenMenu.create_exec_oss_om_entry_for(menu_item)
-        when :exec_system
-          Aro::Dom::Oss_OpenMenu.create_exec_system_entry_for(menu_item)
-        when :exec_data_base
-          Aro::Dom::Oss_OpenMenu.create_exec_data_base_entry_for(menu_item)
         end
       end
 
@@ -148,22 +125,6 @@ module Aro
             Aro::Dom::Ma_ain.sane_backtrace!
             Aro::P.say("exec_oss_om error! #{e}")
           end
-        when :exec_system
-          Aro::P.say("todo: implement!")
-          Aro::P.say("when :exec_system")
-          Aro::Dom::Ma_ain.sane_backtrace!
-          command_string = params[:command_string]
-          if command_string.nil?
-            raise "invalid command_string! #{command_string}"
-          end
-          Aro::P.say("#{self.name} performing #{action_key} action: [system(#{command_string})]")
-          result = system("#{command_string}")
-          Aro::P.say("=> #{result}")
-          Aro::P.say("\n")
-        when :exec_data_base
-          Aro::P.say("todo: implement!")
-          Aro::P.say("when :exec_data_base")
-          Aro::Dom::Ma_ain.sane_backtrace!
         end
       end
 

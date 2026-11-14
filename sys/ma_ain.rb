@@ -57,11 +57,13 @@ module Aro
       # todo: unused currently. init instance with hashing algo stuff
       attr_accessor :valid_security
       attr_accessor :run_mode
+      attr_accessor :menu_history
 
       def reign!
         begin
+          self.menu_history = []
           # default mode is :run
-          self.run_mode = Aro::Mancy::S
+          self.run_mode = Aro::Dom::Ma_ain::S
           Aro::P.say("Aro::Dom::Oss_OpenMenu.install!")
           if Aro::Dom::Oss_OpenMenu.install!
             Aro::P.say("Aro::Dom::Oss_OpenMenu.boot!")
@@ -70,6 +72,8 @@ module Aro
             Aro::P.say("installation failed. exiting now...")
             exit
           end
+
+          self.run_mode = !Aro::Cor.is_production? ? Aro::Dom::Ma_ain::O : Aro::Dom::Ma_ain::S
           Aro::P.say("Aro::Dom::Designer.design")
           Aro::Dom::Designer.design
         rescue RuntimeError => e
@@ -126,7 +130,7 @@ module Aro
           cryption_text = "#{UNICODE_KEYS[:unsecure]}#{UNICODE_KEYS[:bang]}"
         end
 
-        mode_text = RUN_MODES[self.instance.run_mode || Aro::Mancy::O]
+        mode_text = Aro::Dom::Ma_ain::RUN_MODES[self.instance.run_mode || Aro::Mancy::O]
         [
           "(#{cryption_text})[#{mode_text}: ",
           display_text
@@ -137,7 +141,15 @@ module Aro
         super(domain)
       end
 
-      def self.navigate_to!(menu)
+      def self.navigate_to!(menu = nil)
+        if menu.nil? &&
+          self.instance.menu_history.count >= Aro::Dom::Ma_ain::OS
+          menu = Aro::Dom::Menu.find_by(
+            uuid: self.instance.menu_history.last(
+              Aro::Dom::Ma_ain::OS
+            ).first
+          )
+        end
         raise "invalid menu!" if menu.nil? || !menu.kind_of?(Aro::Dom::Menu)
         raise "invalid directory for #{menu.inspect}!" if menu.directory.nil?
         data_base = menu.directory.data_base
@@ -167,7 +179,7 @@ module Aro
       end
 
       def self.running?
-        RUN_MODES[self.instance.run_mode || Aro::Mancy::O] == :run
+        Aro::Dom::Ma_ain::RUN_MODES[self.instance.run_mode || Aro::Mancy::O] == :run
       end
 
       def self.get_current_options
@@ -210,11 +222,7 @@ module Aro
       private
 
       def self.open_menu(menu)
-        puts TTY::Font.new(:standard).write(
-          "f.#{menu.localized_name}",
-          letter_spacing: 1
-        )
-
+        self.instance.menu_history << menu.uuid
         self.instance.current_menu = menu
       end
     end

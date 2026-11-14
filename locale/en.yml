@@ -12,10 +12,12 @@ en:
     edit_ivars_select: "which ivar do you want to edit?"
     new_ivar_value_prompt: "enter new %{value_type} for %{def_key} (current is '%{current_value}'"
     edit_ivars_possible_values_select: "listing possible values for %{def_key}"
+    design_schema_for: "designing schema for %{localized_name}"
     designer:
       create_menu: "enter display text for the new menu"
     imports:
       confirm_import: "%{prompt_text} (selected: %{file_name}) confirm (y/n):"
+      user_cancelled: "user cancelled import."
     library:
       get_book_param: "enter %{key}"
       new_book_select: "creating a new book"

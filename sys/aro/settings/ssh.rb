@@ -80,23 +80,25 @@ module Aro
       end
 
       def self.id_key_path
-        ::File.join(Aro::Cor.ivar(:OSS_OM_HOME), Aro::Dom::Ssh::ID_KEY_BASE.to_s)
+        id_path = ::File.join(Aro::Cor.ivar(:OSS_OM_HOME), Aro::Dom::Ssh::ID_KEY_BASE.to_s)
+        raise "missing_id_key!" if Aro::Dom::Ma_ain.is_initialized? && !::File.exist?(id_path)
+        id_path
       end
 
       private
 
       def self.encrypt!(decrypted_json)
-        Aro::Dom::Ma_ain.sane_backtrace!
-        puts __method__
-        puts :expects_decrypted_json
+        # Aro::Dom::Ma_ain.sane_backtrace!
+        # puts __method__
+        # puts :expects_decrypted_json
 
         return decrypted_json
       end
 
       def self.decrypt!(encrypted_json)
-        Aro::Dom::Ma_ain.sane_backtrace!
-        puts __method__
-        puts :expects_encrypted_json
+        # Aro::Dom::Ma_ain.sane_backtrace!
+        # puts __method__
+        # puts :expects_encrypted_json
 
         return encrypted_json
       end
