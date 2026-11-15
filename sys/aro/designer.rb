@@ -326,12 +326,42 @@ module Aro
         end
       end
 
-      def self.design_schema_for(chapter_menu_item)
+      def self.design_plugin_for(chapter_menu_item)
         action_data = chapter_menu_item.store.safe_get_key("action_data") || {}
-        raise "missing action params for #{chapter_menu_item.inspect}!" if action_data.nil? ||
+        raise "missing action data for #{chapter_menu_item.inspect}!" if action_data.nil? ||
           !action_data.kind_of?(Hash)
 
-        action_data_copy = action_data.dup
+        action_data = ensure_action_data_oss_om_type_exists!(action_data)
+
+        return design_schema_for(chapter_menu_item) if action_data["oss_om_type"].to_s == :key_value_store.to_s
+
+        plugin_file_path = Aro::Dom::Plugins.choose_plugin
+
+        return if plugin_file_path == false
+
+        raise "missing plugin! #{plugin_file_path}" unless ::File.exist?(plugin_file_path)
+
+        new_action_data = {
+          plugin_file_path: plugin_file_path,
+          oss_om_type: action_data["oss_om_type"].to_s
+        }
+        Aro::P.say("enabled #{plugin_file_path} plugin.")
+        puts JSON.pretty_generate(new_action_data)
+        chapter_menu_item.aro_file.write!({
+          action_data: new_action_data
+        })
+      end
+
+      def self.design_schema_for(chapter_menu_item)
+        action_data = chapter_menu_item.store.safe_get_key("action_data") || {}
+        raise "missing action data for #{chapter_menu_item.inspect}!" if action_data.nil? ||
+          !action_data.kind_of?(Hash)
+
+        action_data = ensure_action_data_oss_om_type_exists!(action_data)
+
+        return design_plugin_for(chapter_menu_item) if action_data["oss_om_type"].to_s == :plugin.to_s
+
+        action_data_copy = action_data.except(:oss_om_type.to_s).dup
         loop do
           options = [
             {name: :back, value: :back},
@@ -357,10 +387,13 @@ module Aro
                 "press enter to confirm ('n' to cancel):"
               ).nil?
             end
-            return if confirmed
+            break if confirmed
           when :save
-            chapter_menu_item.aro_file.write!({action_data: action_data_copy})
-            return
+            action_data_copy[:oss_om_type.to_s] = action_data["oss_om_type"].to_s
+            chapter_menu_item.aro_file.write!({
+              action_data: action_data_copy
+            })
+            break
           when :new_key
             # create new key
             new_key = get_new_value_from_user("enter new key: ")
@@ -388,6 +421,8 @@ module Aro
             Aro::P.say("set #{selected_option} to #{action_data_copy[selected_option]}")
           end
         end
+
+        Aro::Dom::Ma_ain.navigate_to!(chapter_menu_item.menu)
       end
 
       def self.get_new_value_from_user(ask_text, prompt_text_override = nil)
@@ -404,6 +439,30 @@ module Aro
 
         return nil if user_cancelled
         return new_val
+      end
+
+      private
+
+      def self.ensure_action_data_oss_om_type_exists!(data)
+        unless data.keys.include?(:oss_om_type.to_s)
+          # ensure oss_om_type is set
+          options = [
+            {name: :key_value_store, value: :key_value_store},
+            {name: :plugin, value: :plugin}
+          ]
+
+          selected_option = Aro::P.default_select(
+            "select chapter schema oss_om_type: ",
+            options
+          )
+
+          case selected_option.to_sym
+          when :key_value_store, :plugin
+            data["oss_om_type"] = selected_option.to_s
+          end
+        end
+
+        data
       end
 
     end

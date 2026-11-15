@@ -19,7 +19,7 @@ module Aro
         :create_chapter!
       ]
 
-      def self.open_chapter!(chapter_item_uuid = nil, data = {})
+      def self.open_chapter!(chapter_item_uuid = nil, action_data = {})
         chapter_menu_item = Aro::Dom::MenuItem.find_by(uuid: chapter_item_uuid)
         raise "invalid uuid! #{chapter_item_uuid}" if chapter_menu_item.nil?
 
@@ -27,10 +27,30 @@ module Aro
           chapter_menu_item.localized_name,
           letter_spacing: 1
         )
-        puts JSON.pretty_generate(data)
 
-        Aro::Dom::Designer.design_schema_for(chapter_menu_item)
-        Aro::Dom::Ma_ain.navigate_to! # go back to library
+        raise "invalid action data for #{chapter_menu_item.inspect}!" if action_data.nil? ||
+          !action_data.kind_of?(Hash)
+
+        puts JSON.pretty_generate(action_data)
+
+        unless action_data["oss_om_type"].nil?
+          case action_data["oss_om_type"].to_sym
+          when :key_value_store
+            Aro::P.less(:going_to_design_schema)
+            Aro::Dom::Designer.design_schema_for(chapter_menu_item)
+          when :plugin
+            Aro::P.less("Aro::Dom::Ma_ain.running? #{Aro::Dom::Ma_ain.running?}")
+            if Aro::Dom::Ma_ain.running?
+              Aro::P.less(:going_to_run_plugin_from_book)
+
+              Aro::Dom::Ma_ain.run_plugin!(chapter_menu_item, action_data)
+            else
+              Aro::Dom::Designer.design_plugin_for(chapter_menu_item)
+            end
+          end
+        else
+          Aro::Dom::Designer.design_schema_for(chapter_menu_item)
+        end
       end
 
       #
@@ -72,7 +92,7 @@ module Aro
           )
         )
 
-        Aro::Dom::Ma_ain.navigate_to!(contents_menu.reload)
+        Aro::Dom::Ma_ain.navigate_to!(contents_menu)
       end
 
       # the table_of_contents menu_item:

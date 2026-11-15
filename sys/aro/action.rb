@@ -96,7 +96,6 @@ module Aro
         validate_data!(action_key, data)
 
         params = params.symbolize_keys
-        data = data.symbolize_keys
         aro_action_type_def = Aro::Dom::Action::TYPES[action_key]
         case aro_action_type_def[:key]
         when :exec_oss_om
@@ -109,7 +108,7 @@ module Aro
             end
 
             if data.keys.count > Aro::Mancy::O
-              method_call_params << data
+              method_call_params << data.dup.stringify_keys
             end
 
             oss_om_const = params[:aro_class_name].constantize

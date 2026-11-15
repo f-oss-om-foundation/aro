@@ -57,11 +57,9 @@ module Aro
       # todo: unused currently. init instance with hashing algo stuff
       attr_accessor :valid_security
       attr_accessor :run_mode
-      attr_accessor :menu_history
 
       def reign!
         begin
-          self.menu_history = []
           # default mode is :run
           self.run_mode = Aro::Dom::Ma_ain::S
           Aro::P.say("Aro::Dom::Oss_OpenMenu.install!")
@@ -141,15 +139,8 @@ module Aro
         super(domain)
       end
 
-      def self.navigate_to!(menu = nil)
-        if menu.nil? &&
-          self.instance.menu_history.count >= Aro::Dom::Ma_ain::OS
-          menu = Aro::Dom::Menu.find_by(
-            uuid: self.instance.menu_history.last(
-              Aro::Dom::Ma_ain::OS
-            ).first
-          )
-        end
+      def self.navigate_to!(menu)
+
         raise "invalid menu!" if menu.nil? || !menu.kind_of?(Aro::Dom::Menu)
         raise "invalid directory for #{menu.inspect}!" if menu.directory.nil?
         data_base = menu.directory.data_base
@@ -160,7 +151,6 @@ module Aro
 
       def self.open!(data_base = :ma_ain)
         Aro::P.say("Aro::Dom::DataBase.open_menu(#{data_base})")
-
         staged_menu = nil
         begin
           staged_menu = Aro::Dom::DataBase.open_menu(data_base)
@@ -171,6 +161,7 @@ module Aro
         if data_base.to_sym == :ma_ain && self.instance.valid_security.nil?
           self.instance.valid_security = staged_menu.uuid
         end
+
         open_menu(staged_menu)
       end
 
@@ -219,10 +210,54 @@ module Aro
         return Aro::Dom::Ma_ain.instance.stores[aro_file.uuid]
       end
 
+      def self.run_plugin!(chapter_menu_item, action_data)
+        # todo: validate chapter_menu_item
+        plugin_file_path = action_data[:plugin_file_path.to_s]
+        raise "invalid plugin_file_path! #{plugin_file_path}" if plugin_file_path.nil? ||
+          !::File.exist?(plugin_file_path)
+        new_action_data = action_data
+        Aro::P.less(:about_to_run_plugin)
+        plugin_thread = Thread.new{
+          require action_data[:plugin_file_path.to_s]
+          plugin_thread_action_data = action_data.dup
+          plugin_const = nil
+          begin
+            plugin_const = "Aro::Dom::#{
+              ::File.basename(
+                action_data[:plugin_file_path.to_s]
+              ).to_s.downcase.split(".")[
+                Aro::Dom::Ma_ain::O
+              ].split("_").map{|w| w.capitalize}.join("")
+            }".constantize
+
+            raise "must respond_to :oss_om_start!" unless plugin_const.respond_to?(:oss_om_start!)
+
+            new_action_data = plugin_const.oss_om_start!(plugin_thread_action_data)
+
+          rescue StandardError => e
+            Aro::P.say("plugin thread threw an error: #{e}")
+            raise e
+          end
+        }
+
+        begin
+          plugin_thread.join
+        rescue StandardError => e
+          Aro::P.say("plugin crashed")
+          return
+        end
+
+        if new_action_data.kind_of?(Hash)
+          new_action_data["oss_om_type"] = action_data["oss_om_type"].to_s
+          chapter_menu_item.aro_file.write!({
+            action_data: new_action_data
+          })
+        end
+      end
+
       private
 
       def self.open_menu(menu)
-        self.instance.menu_history << menu.uuid
         self.instance.current_menu = menu
       end
     end

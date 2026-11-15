@@ -104,7 +104,7 @@ class Aro::Dom::Store
         aro_class_method: oss_om_method,
         aro_call_params: oss_om_params || []
       },
-      action_data: oss_om_data
+      action_data: oss_om_data.stringify_keys
     }
   end
 

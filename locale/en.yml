@@ -18,6 +18,10 @@ en:
     imports:
       confirm_import: "%{prompt_text} (selected: %{file_name}) confirm (y/n):"
       user_cancelled: "user cancelled import."
+    plugins:
+      confirm_plugin: "[selected %{file_name}] confirm (y/n):"
+      user_cancelled: "user cancelled import."
+      select_plugin: "select a plugin"
     library:
       get_book_param: "enter %{key}"
       new_book_select: "creating a new book"

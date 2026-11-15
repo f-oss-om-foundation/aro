@@ -53,7 +53,11 @@ module Aro
         }
       )
 
-      return if selected_def_key == :back
+      if selected_def_key == :back
+        Aro::Dom::Ma_ain.open!(:cor)
+        return
+      end
+
       Aro::P.say("'#{selected_def_key}' selected")
 
       new_value = nil
@@ -96,7 +100,8 @@ module Aro
       end
 
       set_ivar(selected_def_key, new_value)
-     end
+      Aro::Dom::Ma_ain.open!(:cor)
+    end
 
     ARO_IVA_PREFIX = :ARO_IVA_
     ARO_OVA_PREFIX = :ARO_OVA_
