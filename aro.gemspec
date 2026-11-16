@@ -17,7 +17,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["i2097i@hotmail.com"]
   spec.description   = "aro is a unix utility for designing and creating linux applications."
   spec.summary       = Aro::RELEASE_NOTES.to_s
-  spec.homepage      = "https://github.com/i2097i/aro"
+  spec.homepage      = "https://github.com/f-oss-om-foundation/aro"
   spec.license       = "MIT"
   spec.files         = `git ls-files`.split("\n").reject{|p| p.match?(/^(spec|.release|.*.gem$)/)}
   spec.bindir        = "bin"

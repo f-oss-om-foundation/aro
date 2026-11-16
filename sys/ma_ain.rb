@@ -178,7 +178,9 @@ module Aro
 
         options << {back: :back, value: :back} unless self.instance.current_menu.uuid == self.instance.valid_security
 
-        options << {name: "#{UNICODE_KEYS[:integral]}(#{Aro::Mancy::ARO_DIRECTORY})", value: :open_menu}
+        unless Aro::Cor.ivar(:HIDE_F_OSS_OM_MENU).to_s == "true"
+          options << {name: "#{UNICODE_KEYS[:integral]}(#{Aro::Mancy::ARO_DIRECTORY})", value: :open_menu}
+        end
 
         options += self.instance.current_menu.menu_items.select{|mi| mi.user?}.map{|mi| mi.as_tty}
         options += self.instance.current_menu.menu_items.select{|mi| mi.system?}.map{|mi| mi.as_tty}
@@ -211,14 +213,14 @@ module Aro
       end
 
       def self.run_plugin!(chapter_menu_item, action_data)
-        # todo: validate chapter_menu_item
-        plugin_file_path = action_data[:plugin_file_path.to_s]
+        plugin_file_path = action_data["plugin_file_path"]
+
         raise "invalid plugin_file_path! #{plugin_file_path}" if plugin_file_path.nil? ||
           !::File.exist?(plugin_file_path)
-        new_action_data = action_data
-        Aro::P.less(:about_to_run_plugin)
+        new_action_data = action_data.dup
+
         plugin_thread = Thread.new{
-          require action_data[:plugin_file_path.to_s]
+          require action_data["plugin_file_path"]
           plugin_thread_action_data = action_data.dup
           plugin_const = nil
           begin
@@ -243,12 +245,13 @@ module Aro
         begin
           plugin_thread.join
         rescue StandardError => e
-          Aro::P.say("plugin crashed")
+          Aro::P.say("plugin crashed #{e}")
           return
         end
 
         if new_action_data.kind_of?(Hash)
-          new_action_data["oss_om_type"] = action_data["oss_om_type"].to_s
+          new_action_data["plugin_file_path"] = action_data["plugin_file_path"]
+          new_action_data["oss_om_type"] = action_data["oss_om_type"]
           chapter_menu_item.aro_file.write!({
             action_data: new_action_data
           })

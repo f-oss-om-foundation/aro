@@ -1,5 +1,5 @@
 ## aro
-### oss_om*
+### .oss_om
 
 > __a oss_om unix utility__
 
@@ -23,4 +23,4 @@ $ oss_om
 
 [issues](https://github.com/i2097i/aro/issues)
 
-##### aro (v0.2.7) by scot reichman is copyright (2026)
+##### aro (v0.2.8) by scot reichman is copyright (2026)

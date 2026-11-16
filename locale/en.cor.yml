@@ -12,6 +12,7 @@ en:
         description: "the directory where .oss_om/ lives."
         path_description: "any valid path file path. defaults to $HOME"
       log_db_description: "enable database transaction logging."
+      hide_f_oss_om_description: "hide or show the %{\u222B} menu globally."
     ovars:
       O_description: "zero."
       S_description: "one."

@@ -34,10 +34,7 @@ module Aro
 
     def self.print_cor_def
       self.instance.source_config
-      Aro::P.say("Aro::Cor::DEF")
-      Aro::P.say("\n" + Aro::Cor::DEF.map{|k, v|
-        "#{k}: " + JSON.pretty_generate(Aro::Cor::DEF[k])
-      }.join("\n"))
+      Aro::P.less(JSON.pretty_generate(Aro::Cor::DEF))
     end
 
     def self.edit_ivars
@@ -275,6 +272,12 @@ module Aro
           path: I18n.t("cor.ivars.oss_om_home.path_description"),
         }
       },
+      HIDE_F_OSS_OM_MENU: {
+        type: Aro::Cor::TYPES[:BOOL],
+        access: Aro::Cor::DEF_ACCESS[:WRITE],
+        value: Aro::Cor::BOOLS[:TRUE],
+        description: I18n.t("cor.ivars.hide_f_oss_om_description"),
+      },
       LOG_DATABASE: {
         type: Aro::Cor::TYPES[:BOOL],
         access: Aro::Cor::DEF_ACCESS[:WRITE],
@@ -321,7 +324,7 @@ module Aro
         value: Aro::Mancy::N,
         description: I18n.t("cor.ovars.N_description"),
       },
-      N: {
+      V: {
         type: Aro::Cor::TYPES[:INT],
         access: Aro::Cor::DEF_ACCESS[:READ],
         value: Aro::Mancy::V,
