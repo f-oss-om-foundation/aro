@@ -42,7 +42,7 @@ class Aro::Dom::Store
     store_instance = Aro::Dom::Ma_ain.instance.get_store_for(aro_file)
     updates.each{|k, v|
       store_instance.save_key_value_pair(k, v)
-      Aro::P.say([
+      Aro::D.say([
         "reading in #{k} after setting to #{v} in #{aro_file.aro_file_path}",
         "got value => #{store_instance.safe_get_key(k)}"
       ])

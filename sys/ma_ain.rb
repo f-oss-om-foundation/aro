@@ -217,45 +217,48 @@ module Aro
 
         raise "invalid plugin_file_path! #{plugin_file_path}" if plugin_file_path.nil? ||
           !::File.exist?(plugin_file_path)
+
         new_action_data = action_data.dup
 
-        plugin_thread = Thread.new{
-          require action_data["plugin_file_path"]
-          plugin_thread_action_data = action_data.dup
-          plugin_const = nil
-          begin
-            plugin_const = "Aro::Dom::#{
-              ::File.basename(
-                action_data[:plugin_file_path.to_s]
-              ).to_s.downcase.split(".")[
-                Aro::Dom::Ma_ain::O
-              ].split("_").map{|w| w.capitalize}.join("")
-            }".constantize
-
-            raise "must respond_to :oss_om_start!" unless plugin_const.respond_to?(:oss_om_start!)
-
-            new_action_data = plugin_const.oss_om_start!(plugin_thread_action_data)
-
-          rescue StandardError => e
-            Aro::P.say("plugin thread threw an error: #{e}")
-            raise e
+        data_callback = Proc.new{|d|
+          if d.kind_of?(Hash)
+            d["plugin_file_path"] = action_data["plugin_file_path"]
+            d["oss_om_type"] = action_data["oss_om_type"]
+            # self.instance.store_mutex.synchronize do
+              chapter_menu_item.aro_file.write!({
+                action_data: d
+              })
+            # end
           end
         }
 
+        require action_data["plugin_file_path"]
+        plugin_thread_action_data = action_data.dup
+        plugin_const = nil
         begin
-          plugin_thread.join
+          plugin_const = "Aro::Dom::#{
+            ::File.basename(
+              action_data[:plugin_file_path.to_s]
+            ).to_s.downcase.split(".")[
+              Aro::Dom::Ma_ain::O
+            ].split("_").map{|w| w.capitalize}.join("")
+          }".constantize
+
+          raise "must respond_to :oss_om_start!" unless plugin_const.respond_to?(:oss_om_start!)
+
+          if plugin_const.respond_to?(:configure_plugin_callback)
+            plugin_const.configure_plugin_callback(data_callback)
+            data_callback.call(plugin_const.oss_om_start!(plugin_thread_action_data))
+            new_action_data = nil
+          else
+            new_action_data = plugin_const.oss_om_start!(plugin_thread_action_data)
+          end
         rescue StandardError => e
-          Aro::P.say("plugin crashed #{e}")
-          return
+          Aro::P.say("plugin thread threw an error: #{e}")
+          new_action_data = nil
         end
 
-        if new_action_data.kind_of?(Hash)
-          new_action_data["plugin_file_path"] = action_data["plugin_file_path"]
-          new_action_data["oss_om_type"] = action_data["oss_om_type"]
-          chapter_menu_item.aro_file.write!({
-            action_data: new_action_data
-          })
-        end
+        data_callback.call(new_action_data) unless new_action_data.nil?
       end
 
       private
