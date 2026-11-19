@@ -11,11 +11,7 @@
 =end
 
 module Aro
-  VERSION = :"0.2.8"
+  VERSION = :"0.2.9"
   RELEASE_NOTES = [
-    :basic_settings,
-    :adds_library,
-    :adds_books,
-    :adds_oss_om_plugins
   ].join(" | ")
 end

@@ -1,12 +1,13 @@
-## aro
-### .oss_om
-
-> __a oss_om unix utility__
+# [aro(rubygems)](https://rubygems.org/gems/aro)
+# [aro(github)](https://github.com/f-oss-om-foundation/aro)
 
 ##### __current version:__
 [![Gem Version](https://badge.fury.io/rb/aro.svg)](https://badge.fury.io/rb/aro)
 
-aro is a unix utility for designing and creating linux applications.
+
+```json
+{"tldr": "aro is a unix utility for designing and creating linux applications."}
+```
 
 ### installation
 
@@ -21,6 +22,6 @@ $ oss_om
 ```
 [license](http://opensource.org/licenses/MIT)
 
-[issues](https://github.com/i2097i/aro/issues)
+[issues](https://github.com/f-oss-om-foundation/aro/issues)
 
-##### aro (v0.2.8) by scot reichman is copyright (2026)
+##### aro (v0.2.9) by scot reichman is copyright (2026)
