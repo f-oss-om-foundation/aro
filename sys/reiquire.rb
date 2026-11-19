@@ -60,6 +60,7 @@ module Reiquire
     [
       :active_record,
       :"active_record/schema_dumper",
+      :f_dot,
       :fileutils,
       :"tty-font",
       :"tty-prompt"

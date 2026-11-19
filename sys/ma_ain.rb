@@ -13,7 +13,7 @@
 module Aro
   module Dom
     class Ma_ain < Aro::Mancy
-      # inherits Singleton
+      include Singleton
 
       # evolution planning
       #
@@ -32,7 +32,7 @@ module Aro
 
       EXEC_METHODS = [
         :exec_library!,
-        :exec_settings!,
+        :exec_configuration!,
         :exec_quit!
       ]
 
@@ -61,7 +61,7 @@ module Aro
       def reign!
         begin
           # default mode is :run
-          self.run_mode = Aro::Dom::Ma_ain::S
+          self.run_mode = 1
           Aro::P.say("Aro::Dom::Oss_OpenMenu.install!")
           if Aro::Dom::Oss_OpenMenu.install!
             Aro::P.say("Aro::Dom::Oss_OpenMenu.boot!")
@@ -71,7 +71,7 @@ module Aro
             exit
           end
 
-          self.run_mode = !Aro::Cor.is_production? ? Aro::Dom::Ma_ain::O : Aro::Dom::Ma_ain::S
+          self.run_mode = !Aro::Cor.is_production? ? 0 : 1
           Aro::P.say("Aro::Dom::Designer.design")
           Aro::Dom::Designer.design
         rescue RuntimeError => e
@@ -128,7 +128,7 @@ module Aro
           cryption_text = "#{UNICODE_KEYS[:unsecure]}#{UNICODE_KEYS[:bang]}"
         end
 
-        mode_text = Aro::Dom::Ma_ain::RUN_MODES[self.instance.run_mode || Aro::Mancy::O]
+        mode_text = Aro::Dom::Ma_ain::RUN_MODES[self.instance.run_mode]
         [
           "(#{cryption_text})[#{mode_text}: ",
           display_text
@@ -146,7 +146,7 @@ module Aro
         data_base = menu.directory.data_base
         raise "invalid data_base!" if data_base.nil?
 
-        open_menu(menu)
+        self.open_menu(menu)
       end
 
       def self.open!(data_base = :ma_ain)
@@ -162,7 +162,7 @@ module Aro
           self.instance.valid_security = staged_menu.uuid
         end
 
-        open_menu(staged_menu)
+        self.open_menu(staged_menu)
       end
 
       def self.toggle_run_mode
@@ -170,7 +170,7 @@ module Aro
       end
 
       def self.running?
-        Aro::Dom::Ma_ain::RUN_MODES[self.instance.run_mode || Aro::Mancy::O] == :run
+        Aro::Dom::Ma_ain::RUN_MODES[self.instance.run_mode] == :run
       end
 
       def self.get_current_options
@@ -178,12 +178,22 @@ module Aro
 
         options << {back: :back, value: :back} unless self.instance.current_menu.uuid == self.instance.valid_security
 
-        unless Aro::Cor.ivar(:HIDE_F_OSS_OM_MENU).to_s == "true"
+        # show open_menu if not running or Aro::Cor ivar is set to false
+        hide_preference = Aro::Cor.ivar(:HIDE_F_OSS_OM_MENU).to_s == "true"
+
+        Aro::D.say("self.running?: #{self.running?}")
+        Aro::D.say("will show open_menu: #{hide_preference && !self.running?}")
+
+        if !hide_preference || !self.running?
           options << {name: "#{UNICODE_KEYS[:integral]}(#{Aro::Mancy::ARO_DIRECTORY})", value: :open_menu}
         end
 
-        options += self.instance.current_menu.menu_items.select{|mi| mi.user?}.map{|mi| mi.as_tty}
-        options += self.instance.current_menu.menu_items.select{|mi| mi.system?}.map{|mi| mi.as_tty}
+        options += self.instance.current_menu.menu_items.select{|mi| mi.user?}.map{|menu_item|
+          {name: menu_item.localized_name, value: menu_item.uuid}
+        }
+        options += self.instance.current_menu.menu_items.select{|mi| mi.system?}.map{|menu_item|
+          {name: menu_item.localized_name, value: menu_item.uuid}
+        }
 
         options
       end
@@ -192,8 +202,8 @@ module Aro
         Aro::Dom::Ma_ain.open!(:library)
       end
 
-      def self.exec_settings!
-        Aro::Dom::Ma_ain.open!(:settings)
+      def self.exec_configuration!
+        Aro::Dom::Ma_ain.open!(:configuration)
       end
 
       def self.exec_quit!
@@ -240,7 +250,7 @@ module Aro
             ::File.basename(
               action_data[:plugin_file_path.to_s]
             ).to_s.downcase.split(".")[
-              Aro::Dom::Ma_ain::O
+              Aro::Mancy::O
             ].split("_").map{|w| w.capitalize}.join("")
           }".constantize
 

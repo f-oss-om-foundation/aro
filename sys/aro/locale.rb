@@ -70,7 +70,7 @@ module Aro
 
       def self.i18n_keyify_text(text)
         # downcase'd, gsub non-word characters with "_"
-        text.downcase.gsub(/[\W]/, "_")
+        "#{text.downcase}".gsub(/[\W]/, "_")
       end
 
       def self.i18n_valuify_text(text)

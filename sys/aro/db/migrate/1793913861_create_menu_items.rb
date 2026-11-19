@@ -6,6 +6,7 @@ class CreateMenuItems < ActiveRecord::Migration[8.1]
       t.belongs_to :menu, null: false, foreign_key: true
       t.string :uuid, null: false
       t.integer :type_flag, default: 1
+      t.string :open_system_class, default: "Aro::Dom::Glyph"
 
       t.timestamps
     end

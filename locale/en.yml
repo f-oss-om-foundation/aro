@@ -1,4 +1,6 @@
 en:
+  open_system:
+    create_glyph_select: "choose glyph type"
   open_menu:
     base_db_password_prompt: "enter database password <%{sql_filepath}> (default %{aro_name}): "
     edit_action_for_menu_item: "edit action '%{action_name}' for menu item '%{localized_name}'"
@@ -19,9 +21,16 @@ en:
       confirm_import: "%{prompt_text} (selected: %{file_name}) confirm (y/n):"
       user_cancelled: "user cancelled import."
     plugins:
+      open_plugins_menu: "install :open_system or choose from the plugins/ directory."
       confirm_plugin: "[selected %{file_name}] confirm (y/n):"
       user_cancelled: "user cancelled import."
       select_plugin: "select a plugin"
+      choose_plugin_description: "ruby classes are used as a way to interface other processes with oss_om."
+      choose_plugin_sample_info: "a sample_plugin.rb file is automatically generated in the plugins/ directory."
+      description: "chapter_plugins are installed in books"
+      location: "you can see them by navigating to the library"
+      new_book_prompt: "would you like to create a new book?"
+      new_book_menu: "create new book now?"
     library:
       get_book_param: "enter %{key}"
       new_book_select: "creating a new book"

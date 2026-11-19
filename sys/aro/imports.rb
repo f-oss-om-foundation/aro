@@ -67,9 +67,9 @@ module Aro
           [".keep", ""],
           ["sample.txt", "sample text"]
         ].each{|a|
-          file_path = ::File.join(imports_dir, a[Aro::Dom::Ma_ain::O])
+          file_path = ::File.join(imports_dir, a[Aro::Mancy::O])
           ::File.open(file_path, "w+") {|f|
-            f.write(a[Aro::Dom::Ma_ain::S])
+            f.write(a[Aro::Mancy::S])
           } unless ::File.exist?(file_path)
         }
       end

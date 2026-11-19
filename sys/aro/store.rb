@@ -29,15 +29,11 @@ class Aro::Dom::Store
     @cache = {} # clear'd
   end
 
-  def self.edit(aro_file, updates)
+  def self.save_file!(aro_file, updates)
     return if aro_file.nil?
     unless ::File.exist?(aro_file.aro_file_path)
       ::File.write(aro_file.aro_file_path, {}.to_json)
     end
-
-    Aro::Dom::Ma_ain.sane_backtrace!
-    puts :todo_validate_updates_or_depricate
-    puts __method__
 
     store_instance = Aro::Dom::Ma_ain.instance.get_store_for(aro_file)
     updates.each{|k, v|

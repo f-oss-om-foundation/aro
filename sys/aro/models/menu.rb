@@ -13,6 +13,15 @@
 class Aro::Dom::Menu < ActiveRecord::Base
   include Aro::Dom::Uuid
 
+  self.inheritance_column = :open_system_class
+
+  OPEN_SYSTEM_CLASSES = [
+    "Aro::Dom::Cubicus",
+    "Aro::Dom::Glyph",
+    "Aro::Dom::Objecticus",
+    "Aro::Dom::Perspecticus",
+  ]
+
   has_many :menu_items, class_name: "Aro::Dom::MenuItem"
 
   def localized_name
@@ -27,9 +36,17 @@ class Aro::Dom::Menu < ActiveRecord::Base
     @directory ||= Aro::Dom::DataBase::Directory.find_by(uuid: uuid)
   end
 
-  def generate_new_item(localized_name, for_type: :user)
-    new_menu_item = new_menu_item&.to_s
+  def generate_new_item(localized_name, for_type: :user, open_system_class: nil)
+    localized_name = localized_name&.to_s
     new_menu_item = menu_items.create(type_flag: for_type)
+    if !open_system_class.nil? &&
+      Aro::Dom::Menu::OPEN_SYSTEM_CLASSES.include?(open_system_class&.to_s)
+      new_menu_item.update(open_system_class: open_system_class)
+
+      # load from constant
+      new_menu_item = new_menu_item.open_system_class.constantize.find_by(uuid: new_menu_item.uuid)
+
+    end
     Aro::Dom::DataBase.sync_menu_item!(new_menu_item, localized_name)
     new_menu_item
   end
@@ -45,21 +62,33 @@ class Aro::Dom::Menu < ActiveRecord::Base
     return unless is_menu_named?(:ma_ain) &&
       menu_items.empty?
 
-    [:library, :settings, :quit].each{|k|
+    [:library, :open_system, :configuration, :quit].each{|k|
       i = generate_new_item(k, for_type: :system)
 
-      i.aro_file.write!(
-        Aro::Dom::Store.build_exec_oss_om_params!(
-          k,
-          Aro::Dom::Ma_ain,
-          "exec_#{k}!"
+      if k == :open_system
+        i.aro_file.write!(
+          Aro::Dom::Store.build_exec_oss_om_params!(
+            k,
+            Aro::Dom::Oss_OpenSystem,
+            "start!",
+            [i.uuid],
+            {}
+          )
         )
-      )
+      else
+        i.aro_file.write!(
+          Aro::Dom::Store.build_exec_oss_om_params!(
+            k,
+            Aro::Dom::Ma_ain,
+            "exec_#{k}!"
+          )
+        )
+      end
     }
   end
 
-  def generate_settings!
-    return unless is_menu_named?(:settings) &&
+  def generate_configuration!
+    return unless is_menu_named?(:configuration) &&
       menu_items.empty?
 
     [:cor, :git, :ssh].each{|k|

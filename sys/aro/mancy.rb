@@ -14,7 +14,7 @@
 
 module Aro
   class Mancy
-    include Singleton
+
     A  = :"@"
     O  = 0
     S  = 1
@@ -96,7 +96,7 @@ module Aro
     end
 
     def self.domain
-      is_initialized? ? "#{Aro::Mancy.aro_mancy_name}#{Aro::Mancy::A}#{Aro::Mancy}" : `whoami`.strip
+      is_initialized? ? "#{Aro::Mancy.aro_mancy_name}#{Aro::Mancy::A}#{Aro::Mancy.name}" : `whoami`.strip
     end
 
     def self.aro_mancy_name

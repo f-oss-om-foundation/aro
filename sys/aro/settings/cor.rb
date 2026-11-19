@@ -333,8 +333,6 @@ module Aro
     }
 
     def self.open!
-      cor_menu = Aro::Dom::DataBase.open_menu(:cor)
-      generate_cor_menu_items! if Aro::Mancy::S == cor_menu.menu_items.count
       Aro::Dom::Ma_ain.open!(:cor)
     end
 
@@ -546,28 +544,6 @@ module Aro
     end
 
     private
-
-    def self.generate_cor_menu_items!
-      cor_menu = Aro::Dom::DataBase.open_menu(:cor)
-      return unless Aro::Mancy::S == cor_menu.menu_items.count
-
-      existing_item = cor_menu.menu_items.first
-      raise "missing existing item in #{self.name}.#{__method__}!" if existing_item.nil?
-      EXEC_METHODS.each{|method_name|
-        menu_item = existing_item || cor_menu.generate_new_item(method_name, for_type: :system)
-
-        cor_menu.rename_item(menu_item, method_name) unless existing_item.nil?
-        menu_item.aro_file.write!(
-          Aro::Dom::Store.build_exec_oss_om_params!(
-            "#{:cor} #{method_name}",
-            self,
-            method_name
-          )
-        )
-        # clear existing item var
-        existing_item = nil unless existing_item.nil?
-      }
-    end
 
     def write_config(lines)
       File.open(Aro::Cor.cor_filepath, "w+") do |file|

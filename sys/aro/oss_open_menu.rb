@@ -17,6 +17,7 @@ module Aro
       EXEC_CLASSES = [
         "Aro::Cor",
         "Aro::Dom::Oss_OpenMenu",
+        "Aro::Dom::Oss_OpenSystem",
         "Aro::Dom::Ma_ain",
         "Aro::Dom::Library",
         "Aro::Dom::Book",
@@ -204,8 +205,8 @@ module Aro
 
         unless allow_exec_unsecure_oss_om_entries || Aro::Dom::Ma_ain.is_encrypted?
           Aro::P.say(__method__)
-          Aro::P.say("redirecting to settings until Aro::Dom::Ma_ain.is_encrypted!")
-          Aro::Dom::Ma_ain.exec_settings!
+          Aro::P.say("redirecting to configuration until Aro::Dom::Ma_ain.is_encrypted!")
+          Aro::Dom::Ma_ain.exec_configuration!
           return
         end
 

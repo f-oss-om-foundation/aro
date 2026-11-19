@@ -115,7 +115,7 @@ module Aro
       private
 
       def self.generate_new_book!(book_params)
-        new_book_title_key = book_params[:title].downcase.gsub(" ", "_").to_sym
+        new_book_title_key = "#{book_params[:title].downcase}".gsub(" ", "_").to_sym
 
         book_menu = open_book(
           new_book_title_key,

@@ -2,7 +2,7 @@
 
 =begin
 
-  menu.rb
+  menu_item.rb
 
   aro dom menu item.
 
@@ -14,16 +14,14 @@ class Aro::Dom::MenuItem < ActiveRecord::Base
   include Aro::Dom::TarGoForRootSec
   include Aro::Dom::Uuid
 
+  self.inheritance_column = :open_system_class
+
   belongs_to :menu, class_name: "Aro::Dom::Menu"
 
   enum :type_flag, [
     :system,
     :user
   ]
-
-  def as_tty
-    {name: localized_name, value: uuid}
-  end
 
   def localized_name
     I18n.t(full_i18n_path)

@@ -16,6 +16,8 @@ module Aro
 
       def self.choose_plugin
         ensure_plugins_dir_exists!
+        Aro::P.say(I18n.t("open_menu.plugins.choose_plugin_description"))
+        Aro::P.say(I18n.t("open_menu.plugins.choose_plugin_sample_info"))
 
         options = [
           {name: :back, value: :back}
@@ -75,9 +77,9 @@ module Aro
           "  module Dom",
           "    class SamplePlugin",
           "      def self.oss_om_start!(plugin_data = {})",
-          "        puts self.name",
-          "        puts __method__",
-          "        puts \"running oss_om sample plugin...\"",
+          "        Aro::P.say(self.name)",
+          "        Aro::P.say(__method__)",
+          "        Aro::P.say(\"running oss_om sample plugin...\")",
           "        plugin_data[\"sample_plugin_key\"] = \"hello_from_oss_om_plugin\"",
           "        plugin_data",
           "      end",
@@ -93,9 +95,9 @@ module Aro
           [".keep", ""],
           ["sample_plugin.rb", sample_plugin_raw]
         ].each{|a|
-          file_path = ::File.join(plugins_dir, a[Aro::Dom::Ma_ain::O])
+          file_path = ::File.join(plugins_dir, a[Aro::Mancy::O])
           ::File.open(file_path, "w+") {|f|
-            f.write(a[Aro::Dom::Ma_ain::S])
+            f.write(a[Aro::Mancy::S])
           } unless ::File.exist?(file_path)
         }
       end

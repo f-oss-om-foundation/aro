@@ -27,7 +27,10 @@ class Aro::Dom::DataBase < ActiveRecord::Base
     menu = Aro::Dom::Menu.find_by(uuid: @@data_base_directory.uuid)
     if menu.nil?
       # find or create the new menu
-      menu = Aro::Dom::Menu.create(uuid: @@data_base_directory.uuid)
+      menu_const = Aro::Dom::Menu
+      menu_const = Aro::Dom::Cubicus if menu_sym == :open_system
+
+      menu = menu_const.create(uuid: @@data_base_directory.uuid)
       Aro::Dom::Locale.add_i18n_key(
         menu_sym.to_s,
         new_i18n_display_key: menu.uuid
@@ -112,10 +115,17 @@ class Aro::Dom::DataBase < ActiveRecord::Base
     case @@data_base_directory.unix_path.to_sym
     when :ma_ain
       menu.generate_ma_ain!
-    when :settings
-      menu.generate_settings!
+    when :configuration
+      menu.generate_configuration!
     when :library
       generate_items!(menu, Aro::Dom::Library)
+    when :open_system
+      unless menu.kind_of?(Aro::Dom::Cubicus)
+        raise "expected Aro::Dom::Cubicus open_system menu type! #{menu.inspect}"
+      end
+      menu.generate_open_system!
+    when :cor
+      generate_items!(menu, Aro::Cor)
     when :git
       generate_items!(menu, Aro::Dom::Git)
     when :ssh
