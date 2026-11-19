@@ -16,5 +16,6 @@ module Aro
     :basic_settings,
     :adds_library,
     :adds_books,
+    :adds_oss_om_plugins
   ].join(" | ")
 end

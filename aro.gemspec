@@ -8,6 +8,8 @@
 
 =end
 
+GEM_DESCRIPTION = "aro is a unix utility for designing and creating linux applications."
+
 require_relative :"sys/shr/version".to_s
 
 Gem::Specification.new do |spec|
@@ -15,8 +17,8 @@ Gem::Specification.new do |spec|
   spec.version       = Aro::VERSION.to_s
   spec.authors       = ["i2097i"]
   spec.email         = ["i2097i@hotmail.com"]
-  spec.description   = "aro is a unix utility for designing and creating linux applications."
-  spec.summary       = Aro::RELEASE_NOTES.to_s
+  spec.description   = GEM_DESCRIPTION + "\n#{Aro::VERSION} release notes: #{Aro::RELEASE_NOTES}"
+  spec.summary       = GEM_DESCRIPTION
   spec.homepage      = "https://github.com/f-oss-om-foundation/aro"
   spec.license       = "MIT"
   spec.files         = `git ls-files`.split("\n").reject{|p| p.match?(/^(spec|.release|.*.gem$)/)}

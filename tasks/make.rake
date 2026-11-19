@@ -1,5 +1,4 @@
-desc "rake install && rspec"
+desc "rake install && rake build:checksum && bundle info aro"
 task :make do
-  exec "rake install && bundle info aro"
-  #exec "rake install && rspec --backtrace"
+  exec "rake install && rake build:checksum && bundle info aro"
 end
