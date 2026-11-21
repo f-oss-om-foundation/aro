@@ -15,7 +15,7 @@ module Aro
     class Locale
 
       def self.add_i18n_key(user_input_text, library_name: :menus, new_i18n_display_key: nil)
-        Aro::P.say(__method__)
+        Aro::D.say(__method__)
         library_yaml = load_library(library_name: library_name)
         new_i18n_display_key = i18n_keyify_text(user_input_text) if new_i18n_display_key.nil?
 
@@ -94,7 +94,7 @@ module Aro
           Reiquire.configure_i18n
           return false
         end
-        puts library_yaml.inspect
+        Aro::V.say(library_yaml.inspect)
 
         default_locale = library_yaml[
           I18n.default_locale.to_s

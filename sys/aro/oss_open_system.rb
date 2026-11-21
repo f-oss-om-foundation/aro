@@ -17,7 +17,8 @@ module Aro
 
       attr_accessor :menu_item_uuid
       attr_accessor :runtime_data
-      attr_accessor :runtime_mutex
+      attr_accessor :access_validated
+      attr_accessor :f_dot_mutex
 
       EXEC_METHODS = [
         :start!
@@ -30,10 +31,11 @@ module Aro
       def initialize
         self.menu_item_uuid = nil
         self.runtime_data = Aro::Dom::Oss_OpenSystem::DEFAULT_RUNTIME.dup.stringify_keys
-        self.runtime_mutex = Mutex.new
+        self.f_dot_mutex = Mutex.new
       end
 
       def self.start!(menu_item_uuid = nil, action_data = {})
+        self.instance.access_validated = false
         self.instance.menu_item_uuid = menu_item_uuid
         menu_item = self.instance.get_menu_item
 
@@ -49,9 +51,10 @@ module Aro
         raise "invalid action data for #{menu_item.inspect}!" if action_data.nil? ||
           !action_data.kind_of?(Hash)
 
-        self.instance.runtime_mutex.synchronize do
-          run_f_dot_authentication!
-        end
+        run_f_dot_authentication!
+
+        Aro::P.say("#{self.name} f_dot access validated: #{self.instance.access_validated}")
+        return unless self.instance.access_validated
 
         Aro::Dom::Ma_ain.open!(:open_system)
       end
@@ -63,9 +66,14 @@ module Aro
       end
 
       def self.run_f_dot_authentication!
-        write_state_callback = Proc.new{|incoming_data|
-          self.instance.update_runtime_f_dot(incoming_data)
+        write_state_callback = Proc.new{|incoming_data, validated = false|
+          Aro::Dom::Oss_OpenSystem.instance.f_dot_mutex.synchronize do
+            Aro::Dom::Oss_OpenSystem.instance.access_validated = true if validated
+            Aro::Dom::Oss_OpenSystem.instance.update_runtime_f_dot(incoming_data)
+          end
         }
+
+
         FDot::Based::Processor.initialize_with_data(
           Aro::Mancy.root_dir,
           write_state_callback,

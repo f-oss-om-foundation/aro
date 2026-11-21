@@ -33,8 +33,27 @@ module Aro
     end
 
     def self.say(message)
-      p.say(normalize_message(message))
+      p.say(
+        normalize_message(message),
+        color: [
+          :red,
+          :green,
+          :yellow,
+          :blue,
+          :magenta,
+          :cyan,
+          :white,
+          :bright_red,
+          :bright_green,
+          :bright_yellow,
+          :bright_blue,
+          :bright_magenta,
+          :bright_cyan,
+          :bright_white
+        ].sample
+      )
     end
+
 
     def self.less(message)
       IO.popen("less -X", "w") { |f| f.puts(message) }

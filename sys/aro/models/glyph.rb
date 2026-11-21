@@ -10,16 +10,21 @@
 
 =end
 
+require_relative "./menu_item"
 
 class Aro::Dom::Glyph < Aro::Dom::MenuItem
   # belongs_to :menu
 
-  def self.create_glyph(menu_item_uuid, action_data = {})
+  EXEC_METHODS = [
+    :create_glyph!
+  ]
+
+  def self.create_glyph!(menu_item_uuid, action_data = {})
     create_glyph_menu_item = Aro::Dom::MenuItem.find_by(uuid: menu_item_uuid)
 
     raise "invalid menu_item_uuid! #{menu_item_uuid}" if create_glyph_menu_item.nil?
 
-    Aro::P.warn("#{self.name} is the base essence within open_system")
+    Aro::P.say("#{self.name} is the base essence within open_system")
 
     options = [
       {name: :back, value: :back},
@@ -57,7 +62,7 @@ class Aro::Dom::Glyph < Aro::Dom::MenuItem
       )
     )
 
-    Aro::P.ok("new #{self.name} '#{i.localized_name}' created successfully!")
-
+    Aro::P.say("new #{self.name} '#{i.localized_name}' created successfully!")
+    Aro::Dom::Ma_ain.navigate_to!(create_glyph_menu_item.menu)
   end
 end

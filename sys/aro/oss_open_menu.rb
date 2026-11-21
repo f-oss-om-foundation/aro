@@ -22,7 +22,11 @@ module Aro
         "Aro::Dom::Library",
         "Aro::Dom::Book",
         "Aro::Dom::Git",
-        "Aro::Dom::Ssh"
+        "Aro::Dom::Ssh",
+        "Aro::Dom::Cubicus",
+        "Aro::Dom::Glyph",
+        "Aro::Dom::Perspecticus",
+        "Aro::Dom::Objecticus"
       ]
 
       EXEC_METHODS = [
