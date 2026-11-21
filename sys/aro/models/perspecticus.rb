@@ -22,6 +22,7 @@ class Aro::Dom::Perspecticus < Aro::Dom::Glyph
     perspecticus_menu_item = Aro::Dom::Perspecticus.find_by(uuid: perspecticus_uuid)
     raise "invalid perspecticus_uuid #{perspecticus_uuid}" if perspecticus_menu_item.nil?
 
-    Aro::Dom::Cubicus.project_from(perspecticus_menu_item)
+    Aro::Dom::Oss_OpenSystem.open_projector!(perspecticus_menu_item)
   end
+
 end

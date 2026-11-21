@@ -63,6 +63,7 @@ class Aro::Dom::Glyph < Aro::Dom::MenuItem
     )
 
     Aro::P.say("new #{self.name} '#{i.localized_name}' created successfully!")
+
     Aro::Dom::Ma_ain.navigate_to!(create_glyph_menu_item.menu)
   end
 end

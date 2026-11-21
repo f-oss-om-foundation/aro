@@ -73,7 +73,6 @@ module Aro
           end
         }
 
-
         FDot::Based::Processor.initialize_with_data(
           Aro::Mancy.root_dir,
           write_state_callback,
@@ -96,6 +95,19 @@ module Aro
 
       def get_menu_item
         Aro::Dom::MenuItem.find_by(uuid: self.menu_item_uuid)
+      end
+
+      def self.open_projector!(glyph)
+        cubicus_menu = glyph.menu
+        raise "invalid cubicus for glyph!: #{glyph}" if cubicus_menu.nil? ||
+          !cubicus_menu.kind_of?(Aro::Dom::Cubicus)
+
+        action_data = glyph.store.safe_get_key("action_data") || {}
+
+        raise "invalid action data! #{action_data}" unless action_data.kind_of?(Hash)
+
+        projector = Aro::Dom::Projector.new(cubicus_menu, glyph, action_data)
+        projector.project!
       end
 
     end
