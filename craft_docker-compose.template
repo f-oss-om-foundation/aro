@@ -1,0 +1,59 @@
+# this configuration is built explicitly for websocket
+# controls such that a/any unix host system can
+# run aro's oss_om via websockets and a minimal
+# implementation of a single instance of mozilla firefox
+# running in kiosk mode within a docker container.
+# the host system starts the oss_om process in cubicus mode:
+#   $ oss_om cubicus
+# this starts oss_om in websocket display_mode
+# lightweight golang websocket server process
+# starts and begins processing communication
+# between the host process (oss_om) and the
+# display (a regular browser tab can also be used)
+# for controls processing and rendering display to
+# the display (firefox docker container)
+# oss_om has three components within a project
+# 1) display:
+#     a) a browser tab visiting the same url as the display docker container.
+#     b) the display docker container
+# 2) controls:
+#     this is the host system that runs docker compose and starts oss_om cubicus
+# 3) history:
+#     this is a gitea instance for oss_om encrypted storage
+#     note: this is not implemented yet
+#
+
+services:
+  display:
+    image: lscr.io/linuxserver/firefox:latest
+    container_name: display
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - FIREFOX_CLI=--kiosk http://host.docker.internal:8080/
+      - SELKIES_UI_SHOW_SIDEBAR=false
+      - HARDEN_DESKTOP=true
+      - HARDEN_OPENBOX=true
+      - RESTART_APP=true
+    volumes:
+      - ./.oss_om/open_system/display:/config
+    ports:
+      - "3001:3001"
+      - "3000:3000"
+    shm_size: "1gb"
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+  history:
+    image: gitea/gitea:latest
+    container_name: history
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+    restart: unless-stopped
+    volumes:
+      - ./.oss_om/open_system/history:/data
+    ports:
+      - "2997:3000"
+      - "2222:22"
