@@ -39,5 +39,5 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency     "sqlite3",              "~> 2.10", ">= 2.10.2"
   spec.add_runtime_dependency     "tty-prompt",              "~> 0.23", ">= 0.23.1"
   spec.add_runtime_dependency     "tty-font",              "~> 0.5", ">= 0.5.0"
-  spec.add_runtime_dependency     "f_dot",              "~> 0.0.1", ">= 0.0.1"
+  spec.add_runtime_dependency     "f_dot",              "~> 0.0.2", ">= 0.0.2"
 end

@@ -35,7 +35,7 @@ module Aro
           Aro::P.say("run the following commands to continue:")
           Aro::P.say("$ cd #{Aro::Cor.ivar(:OSS_OM_HOME)} && oss_om")
           Aro::P.say("exiting...")
-          exit
+          Aro::Dom::Ma_ain.exec_quit!
         else
           Aro::Dom::Ma_ain.instance.reign!
         end

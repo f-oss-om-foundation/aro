@@ -68,7 +68,7 @@ module Aro
             Aro::Dom::Oss_OpenMenu.boot!
           else
             Aro::P.say("installation failed. exiting now...")
-            exit
+            self.class.exec_quit!
           end
 
           self.run_mode = !Aro::Cor.is_production? ? 0 : 1

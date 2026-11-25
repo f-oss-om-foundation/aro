@@ -44,6 +44,8 @@ module Aro
       # a projector modifies the attributes of a glyph in accordance with user input
 
       def initialize(cubicus, glyph, glyph_action_data)
+        self.glyph_action_data = {} # initialize
+        self.open_system_space = {} # initialize
         self.is_projecting = false
         self.cubicus_uuid = cubicus.uuid
         self.glyph_uuid = glyph.uuid
@@ -62,7 +64,7 @@ module Aro
 
       def project!
         self.is_projecting = true
-        FDot::Based::Cubicus.launch!(self)
+
         self.is_projecting = false
       end
 

@@ -108,6 +108,8 @@ module Aro
 
         projector = Aro::Dom::Projector.new(cubicus_menu, glyph, action_data)
         projector.project!
+
+        Aro::P.less(projector.inspect)
       end
 
     end

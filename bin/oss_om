@@ -14,4 +14,20 @@
 
 require :aro.to_s
 
-Aro::Dom::Ma_ain.instance.reign!
+begin
+  if ARGV[0]&.strip&.to_sym == :cubicus
+    # start in FDot::DISPLAY_MODES[:websockets] display_mode
+    # start websocket thread
+    FDot::Based::Processor.instance.f_dot_space_override_path = Aro::Mancy.root_dir
+    FDot::Based::Cubicus.instance.start_ws_thread
+    at_exit do
+      FDot::Based::Processor.user_exited!
+    end
+  end
+
+  Aro::Dom::Ma_ain.instance.reign!
+rescue StandardError => e
+  puts "rescued in aro bin for #{e}"
+  puts Thread.current.backtrace
+  raise e
+end
