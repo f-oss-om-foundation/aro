@@ -65,7 +65,7 @@ module Aro
           valid_param_keys!(action_key, params) && valid_param_values!(action_key, params)
       end
 
-      def self.validate_data!(action_key, data)
+      def self.validate_data!(action_key, data = {})
         Aro::P.say("validating #{action_key} action data")
 
         raise "invalid data! (#{data})" unless data.kind_of?(Hash)

@@ -29,31 +29,13 @@ module Aro
     end
 
     def self.ask(message)
-      gets message
+      FDot::Based.ask(message) {|new_value|
+        return new_value
+      }
     end
 
     def self.say(message)
       puts normalize_message(message)
-      # color = [
-      #   :red,
-      #   :green,
-      #   :yellow,
-      #   :blue,
-      #   :magenta,
-      #   :cyan,
-      #   :white,
-      #   :bright_red,
-      #   :bright_green,
-      #   :bright_yellow,
-      #   :bright_blue,
-      #   :bright_magenta,
-      #   :bright_cyan,
-      #   :bright_white
-      # ].shuffle.shuffle.sample
-      # p.say(
-      #   normalize_message(message),
-      #   color: color
-      # )
     end
 
     def self.default_select(display_text, options)
@@ -63,18 +45,10 @@ module Aro
       ) {|selected_option|
         return selected_option
       }
-      # Aro::P.p.select(
-      #   Aro::Dom::Ma_ain.mini_hud_for(display_text),
-      #   options,
-      #   show_help: :always,
-      #   cycle: true,
-      #   per_page: 11
-      # )
     end
 
     def self.less(message)
       FDot::Based.less(message)
-      # IO.popen("less -X", "w") { |f| f.puts(message) }
     end
 
     def self.normalize_message(message)

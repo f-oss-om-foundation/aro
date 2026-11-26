@@ -71,7 +71,6 @@ module Aro
             self.class.exec_quit!
           end
 
-          self.run_mode = !Aro::Cor.is_production? ? 0 : 1
           Aro::P.say("Aro::Dom::Designer.design")
           Aro::Dom::Designer.design
         rescue RuntimeError => e
@@ -207,6 +206,7 @@ module Aro
       end
 
       def self.exec_quit!
+        FDot::Based::Processor.user_exited!
         exit
       end
 

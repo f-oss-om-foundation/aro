@@ -432,7 +432,7 @@ module Aro
         while new_val.nil? && !user_cancelled
           Aro::P.say(ask_text)
           puts "\n"
-          new_val = Aro::P.p.ask(prompt_text_override || I18n.t("open_menu.get_new_value_from_user"))
+          new_val = Aro::Prompt.ask(prompt_text_override || I18n.t("open_menu.get_new_value_from_user"))
           user_cancelled = new_val.nil? || new_val.empty?
           new_val = nil if user_cancelled
         end
