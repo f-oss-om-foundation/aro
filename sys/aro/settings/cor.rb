@@ -69,7 +69,7 @@ module Aro
         when :bool
           new_value = !(ivar(selected_def_key) == :true.to_s)
         when :int, :string
-          new_value = Aro::P.p.ask(
+          new_value = Aro::Prompt.ask(
             I18n.t(
               "open_menu.new_ivar_value_prompt",
               def_key: selected_def_key,

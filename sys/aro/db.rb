@@ -63,7 +63,7 @@ module Aro
       end
 
       unless File.exist?(db_config_filepath)
-        pw = Aro::P.p.ask(
+        pw = Aro::Prompt.ask(
           I18n.t(
             "open_menu.base_db_password_prompt",
             sql_filepath: self.class.sql_filepath.gsub(

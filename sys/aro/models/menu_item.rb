@@ -103,7 +103,7 @@ class Aro::Dom::MenuItem < ActiveRecord::Base
       Aro::Dom::Ma_ain.sane_backtrace!
       puts __method__
       puts inspect
-      puts :todo_implement_invalid_action_handling
+      puts "todo_implement_invalid_action_handling"
     end
   end
 end

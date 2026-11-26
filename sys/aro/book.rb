@@ -36,13 +36,10 @@ module Aro
         unless action_data["oss_om_type"].nil?
           case action_data["oss_om_type"].to_sym
           when :key_value_store
-            Aro::P.less(:going_to_design_schema)
             Aro::Dom::Designer.design_schema_for(chapter_menu_item)
           when :plugin
             Aro::P.less("Aro::Dom::Ma_ain.running? #{Aro::Dom::Ma_ain.running?}")
             if Aro::Dom::Ma_ain.running?
-              Aro::P.less(:going_to_run_plugin_from_book)
-
               Aro::Dom::Ma_ain.run_plugin!(chapter_menu_item, action_data)
             else
               Aro::Dom::Designer.design_plugin_for(chapter_menu_item)

@@ -35,7 +35,7 @@ module Aro
         is_valid = true
         raise "invalid book_yaml" unless is_valid
 
-        puts :todo_import_book_yaml
+        puts "todo_import_book_yaml"
         Aro::Dom::Ma_ain.sane_backtrace!
       end
 
@@ -95,8 +95,8 @@ module Aro
           case selected_option.to_sym
           when :back
             confirmed = true
-            if book_params.any?{|k, v| !v.nil?}
-              confirmed = Aro::P.p.ask(I18n.t("open_menu.library.unsaved_changes_confirm")).to_sym
+            unless book_params.all?{|k, v| v.nil?}
+              confirmed = Aro::Prompt.ask(I18n.t("open_menu.library.unsaved_changes_confirm")).to_sym
               confirmed = confirmed == :y
             end
             return Aro::Dom::Library.open! if confirmed

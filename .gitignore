@@ -6,3 +6,4 @@
 *.sql
 pkg/*
 success/*
+*.DS_Store

@@ -433,6 +433,8 @@ module Aro
           Aro::P.say(ask_text)
           puts "\n"
           new_val = Aro::Prompt.ask(prompt_text_override || I18n.t("open_menu.get_new_value_from_user"))
+
+          puts "#{self.class.name} got new_val: #{new_val}"
           user_cancelled = new_val.nil? || new_val.empty?
           new_val = nil if user_cancelled
         end
