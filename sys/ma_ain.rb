@@ -175,7 +175,7 @@ module Aro
       def self.get_current_options
         options = []
 
-        options << {back: :back, value: :back} unless self.instance.current_menu.uuid == self.instance.valid_security
+        options << {name: :back, value: :back} unless self.instance.current_menu.uuid == self.instance.valid_security
 
         # show open_menu if not running or Aro::Cor ivar is set to false
         hide_preference = Aro::Cor.ivar(:HIDE_F_OSS_OM_MENU).to_s == "true"
@@ -223,6 +223,12 @@ module Aro
       end
 
       def self.run_plugin!(chapter_menu_item, action_data)
+        if FDot::DISPLAY_MODES[:websockets] == FDot::Based::Interface.instance.display_mode
+          Aro::P.say("plugins cannot be run in FDot::DISPLAY_MODES[:websockets] display mode!")
+          Aro::P.say("they must be run directly in the FDot::DISPLAY_MODES[:terminal] display mode.")
+          return
+        end
+
         plugin_file_path = action_data["plugin_file_path"]
 
         raise "invalid plugin_file_path! #{plugin_file_path}" if plugin_file_path.nil? ||
@@ -234,11 +240,9 @@ module Aro
           if d.kind_of?(Hash)
             d["plugin_file_path"] = action_data["plugin_file_path"]
             d["oss_om_type"] = action_data["oss_om_type"]
-            # self.instance.store_mutex.synchronize do
-              chapter_menu_item.aro_file.write!({
-                action_data: d
-              })
-            # end
+            chapter_menu_item.aro_file.write!({
+              action_data: d
+            })
           end
         }
 

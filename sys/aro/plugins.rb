@@ -36,7 +36,7 @@ module Aro
         raise "invalid file path! #{selected_option}" unless File.exist?(selected_option)
 
         Aro::P.say("selected plugin: #{selected_option}")
-        confirmed = Aro::P.p.ask(
+        confirmed = Aro::Prompt.ask(
           I18n.t(
             "open_menu.plugins.confirm_plugin",
             file_name: File.basename(selected_option)

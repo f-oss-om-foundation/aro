@@ -39,7 +39,10 @@ module Aro
             Aro::Dom::Designer.design_schema_for(chapter_menu_item)
           when :plugin
             Aro::P.less("Aro::Dom::Ma_ain.running? #{Aro::Dom::Ma_ain.running?}")
-            if Aro::Dom::Ma_ain.running?
+            if action_data.keys.include?(:plugin_file_path.to_s) &&
+              !action_data["plugin_file_path"].nil? &&
+              Aro::Dom::Ma_ain.running?
+
               Aro::Dom::Ma_ain.run_plugin!(chapter_menu_item, action_data)
             else
               Aro::Dom::Designer.design_plugin_for(chapter_menu_item)
@@ -48,6 +51,8 @@ module Aro
         else
           Aro::Dom::Designer.design_schema_for(chapter_menu_item)
         end
+
+        Aro::Dom::Ma_ain.navigate_to!(chapter_menu_item.menu)
       end
 
       #
@@ -66,19 +71,9 @@ module Aro
 
         chapter_params = {
           title: "chapter_#{contents_menu.menu_items.count}", # auto-increment
-          text: nil
         }
 
-        while chapter_params[:text].nil?
-          chapter_params[:text] = Aro::Dom::Imports.get_plain_text_import(
-            "import plain text from file for #{chapter_params[:title]}: (choose file)"
-          )
-
-          return if chapter_params[:text] == false
-        end
-
         chapter_menu_item = contents_menu.generate_new_item(chapter_params[:title], for_type: :system)
-
         chapter_menu_item.aro_file.write!(
           Aro::Dom::Store.build_exec_oss_om_params!(
             chapter_params[:title],
@@ -89,7 +84,7 @@ module Aro
           )
         )
 
-        Aro::Dom::Ma_ain.navigate_to!(contents_menu)
+        open_chapter!(chapter_menu_item.uuid, chapter_params.stringify_keys)
       end
 
       # the table_of_contents menu_item:
